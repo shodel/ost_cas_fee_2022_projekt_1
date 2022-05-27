@@ -11,12 +11,54 @@
 </head>
 <body>
 <h1>Note App</h1>
-<div class="grid-wrapper">
-  <div class="todo-overview">
-    Overview
+<div class="flex-container-row">
+  <div class="flex-item-grow-1 flex-container-column">
+    <h2>Overview</h2>
+    <div class="flex-container-row">
+      <button type="button">Create new ToDo</button>
+      <button class="flex-item-end" type="button">Toggle style</button>
+    </div>
+    <div class="flex-container-row">
+      <button type="button">By Name</button>
+      <button type="button">By Due Date</button>
+      <button type="button">By Creation Date</button>
+      <button type="button">By Importance</button>
+      <button class="flex-item-end" type="button">Filter completed</button>
+    </div>
+    <div class="flex-container-column">
+      <div class="todo-item">
+        <div class="todo-item-due-date">in a day</div>
+        <div class="todo-item-title">Geburi von Sarah</div>
+        <div class="todo-item-importance">⚡⚡⚡⚡⚡</div>
+        <div class="todo-item-state">✅ Completed</div>
+        <div class="todo-item-description">Anrufen</div>
+        <div class="todo-item-edit">
+          <button type="button">Edit</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="todo-edit">
-    Edit
+  <div class="flex-item-grow-1">
+    <h2>Edit</h2>
+    <div class="todo-form">
+      <form>
+        <label for="todo-edit-title">Title</label>
+        <input id="todo-edit-title" class="full-width" type="text">
+        <label for="todo-edit-importance">Importance</label>
+        <input id="todo-edit-importance" class="full-width" type="text">
+        <label for="todo-edit-due-date">Due Date</label>
+        <input id="todo-edit-due-date" class="full-width" type="date">
+        <input id="todo-edit-finished" type="checkbox" name="todo-finished">
+        <label for="todo-edit-finished">Finished</label><br>
+        <label for="todo-edit-description">Description</label>
+        <textarea id="todo-edit-description" class="full-width"></textarea>
+      </form>
+    </div>
+    <div class="todo-actions flex-container-row">
+      <button type="button">Update</button>
+      <button type="button">Update & Overview</button>
+      <button type="button">Overview</button>
+    </div>
   </div>
 </div>
 </body>
