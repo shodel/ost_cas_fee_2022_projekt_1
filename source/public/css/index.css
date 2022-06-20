@@ -44,22 +44,34 @@
     width: 100%;
 }
 
-.flex-container-column {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+body {
+    background-color: whitesmoke;
+    color: #111;
+    font-family: Heebo, Helvetica, sans-serif;
 }
 
-.flex-container-row {
-    display: flex;
-    flex-direction: row;
-    gap: 6px;
+.alternative-theme {
+    background-color: #3c3f41;
+    color: whitesmoke;
 }
 
-.flex-item-end {
-    margin-left: auto;
+button {
+    background-color: #0d6efa;
+    color: whitesmoke;
+    border: none;
+    border-radius: 4px;
+    padding: 6px;
+    font-family: Heebo, Helvetica, sans-serif;
 }
 
-.flex-item-grow-1 {
-    flex: 1;
+input[type="checkbox"] {
+    margin-left: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.margin-bottom-default {
+    margin-bottom: 6px;
 }

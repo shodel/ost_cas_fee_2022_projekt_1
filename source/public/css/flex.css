@@ -1,0 +1,19 @@
+.flex-container-column {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.flex-container-row {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+}
+
+.flex-item-end {
+    margin-left: auto;
+}
+
+.flex-item-grow-1 {
+    flex: 1;
+}

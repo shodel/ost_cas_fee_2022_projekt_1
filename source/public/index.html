@@ -4,62 +4,72 @@
   <meta charset="UTF-8">
   <title>Note App</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js"
-          integrity="sha256-/PJBs6QWvXijOFIX04kZpLb6ZtSQckdOIavLWKKOgXU=" crossorigin="anonymous" defer></script>
-  <script src="scripts/index.js" type="module"></script>
+          integrity="sha256-/PJBs6QWvXijOFIX04kZpLb6ZtSQckdOIavLWKKOgXU="
+          crossorigin="anonymous" defer></script>
+  <script src="js/controllers/index-controller.js" type="module"></script>
+  <script src="js/controllers/todo-controller.js" type="module"></script>
 
-  <link rel="stylesheet" href="styles/index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/flex.css">
 </head>
 <body>
 <h1>Note App</h1>
-<div class="flex-container-row">
-  <div class="flex-item-grow-1 flex-container-column">
-    <h2>Overview</h2>
-    <div class="flex-container-row">
-      <button type="button">Create new ToDo</button>
-      <button class="flex-item-end" type="button">Toggle style</button>
-    </div>
-    <div class="flex-container-row">
-      <button type="button">By Name</button>
-      <button type="button">By Due Date</button>
-      <button type="button">By Creation Date</button>
-      <button type="button">By Importance</button>
-      <button class="flex-item-end" type="button">Filter completed</button>
-    </div>
-    <div class="flex-container-column">
-      <div class="todo-item">
-        <div class="todo-item-due-date">in a day</div>
-        <div class="todo-item-title">Geburi von Sarah</div>
-        <div class="todo-item-importance">⚡⚡⚡⚡⚡</div>
-        <div class="todo-item-state">✅ Completed</div>
-        <div class="todo-item-description">Anrufen</div>
-        <div class="todo-item-edit">
-          <button type="button">Edit</button>
-        </div>
-      </div>
-    </div>
+<div id="todo-overview">
+  <div class="flex-container-row margin-bottom-default">
+    <button id="button-create-new-todo" type="button">Create new ToDo</button>
+    <button id="button-switch-theme" class="flex-item-end" type="button">Toggle style</button>
   </div>
-  <div class="flex-item-grow-1">
-    <h2>Edit</h2>
+  <div class="flex-container-row margin-bottom-default">
+    <button type="button">By Name</button>
+    <button type="button">By Due Date</button>
+    <button type="button">By Creation Date</button>
+    <button type="button">By Importance</button>
+    <button class="flex-item-end" type="button">Filter completed</button>
+  </div>
+  <div id="todo-item-container" class="flex-container-column">
+  </div>
+
+  <!--  <script id="todos-template" type="text/x-handlebars-template">-->
+  <!--    {{#each this}}-->
+  <!--    <div class="todo-item">-->
+  <!--      <div class="todo-item-due-date">in a day</div>-->
+  <!--      <div class="todo-item-title">Geburi von Sarah</div>-->
+  <!--      <div class="todo-item-importance">⚡⚡⚡⚡⚡</div>-->
+  <!--      <div class="todo-item-state">✅ Completed</div>-->
+  <!--      <div class="todo-item-description">Anrufen</div>-->
+  <!--      <div class="todo-item-edit">-->
+  <!--        <button type="button">Edit</button>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </script>-->
+</div>
+<div id="todo-edit" class="flex-item-grow-1 hidden">
+  <form id="todo-edit-form">
     <div class="todo-form">
-      <form>
-        <label for="todo-edit-title">Title</label>
-        <input id="todo-edit-title" class="full-width" type="text">
-        <label for="todo-edit-importance">Importance</label>
-        <input id="todo-edit-importance" class="full-width" type="text">
-        <label for="todo-edit-due-date">Due Date</label>
-        <input id="todo-edit-due-date" class="full-width" type="date">
+      <input id="todo-edit-id" type="hidden">
+      <label for="todo-edit-title">Title</label>
+      <input id="todo-edit-title" class="full-width margin-bottom-default" type="text" required>
+      <label for="todo-edit-importance">Importance</label>
+      <input id="todo-edit-importance" class="full-width margin-bottom-default" type="number" min="1" max="5" value="3">
+      <label for="todo-edit-due-date">Due Date</label>
+      <input id="todo-edit-due-date" class="full-width margin-bottom-default" type="date">
+      <div class="full-width margin-bottom-default">
         <input id="todo-edit-finished" type="checkbox" name="todo-finished">
-        <label for="todo-edit-finished">Finished</label><br>
-        <label for="todo-edit-description">Description</label>
-        <textarea id="todo-edit-description" class="full-width"></textarea>
-      </form>
+        <label for="todo-edit-finished" class="margin-bottom-default">Finished</label>
+      </div>
+      <label for="todo-edit-description">Description</label>
+      <textarea id="todo-edit-description" class="full-width margin-bottom-default"></textarea>
     </div>
     <div class="todo-actions flex-container-row">
-      <button type="button">Update</button>
-      <button type="button">Update & Overview</button>
-      <button type="button">Overview</button>
+      <button id="button-create-update-todo" type="submit">Update</button>
+      <button type="submit">Update & Overview</button>
+      <button id="button-overview" type="button">Overview</button>
     </div>
-  </div>
+  </form>
 </div>
 </body>
 </html>
