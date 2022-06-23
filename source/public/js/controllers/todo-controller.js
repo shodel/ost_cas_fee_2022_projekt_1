@@ -226,11 +226,22 @@ function createEditElement(todoItem) {
   return editDiv;
 }
 
+function applyCompleteFilter(todoItems) {
+  const filterCompletedButton = document.getElementById(
+    "button-filter-completed"
+  );
+  if (filterCompletedButton.classList.contains("active")) {
+    return todoItems.filter((todoItem) => !todoItem.finished);
+  }
+  return todoItems;
+}
+
 function renderTodosFromStorage() {
   const todoItems = JSON.parse(sessionStorage.getItem("todoItems"));
   document.getElementById("todo-item-container").innerHTML = "";
   const todosFragment = document.createDocumentFragment();
-  todoItems.forEach((todoItem) => {
+  const filteredTodoItems = applyCompleteFilter(todoItems);
+  filteredTodoItems.forEach((todoItem) => {
     const todoDiv = document.createElement("div");
     todoDiv.classList.add("todo-item");
     todoDiv.appendChild(createDueDateElement(todoItem));
@@ -407,6 +418,7 @@ async function initialize() {
     } else {
       filterCompletedButton.classList.add("active");
     }
+    renderTodosFromStorage();
   });
 }
 
