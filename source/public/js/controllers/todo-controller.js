@@ -1,6 +1,12 @@
 import { TodoService } from "../services/todo-service.js";
 import { TodoItem } from "../todo-item.js";
 import { getDifferenceInDaysFromNow } from "../utils/date-utils.js";
+import {
+  SORT_ATTR_TITLE,
+  SORT_ORDER_ASC,
+  SORT_ORDER_DESC,
+  sortByTitle,
+} from "../utils/sort-utils.js";
 
 function switchView() {
   const todoOverview = document.getElementById("todo-overview");
@@ -56,45 +62,41 @@ function clearTodoForm() {
 }
 
 function createTodo(todoItem, showOverview) {
-  TodoService
-    .createTodo(
-      todoItem.title,
-      todoItem.importance,
-      todoItem.dueDate,
-      todoItem.finished,
-      todoItem.description
-    )
-    .then((createdTodoItem) => {
+  TodoService.createTodo(
+    todoItem.title,
+    todoItem.importance,
+    todoItem.dueDate,
+    todoItem.finished,
+    todoItem.description
+  ).then((createdTodoItem) => {
+    if (showOverview) {
+      switchToOverview();
+    } else {
+      // eslint-disable-next-line no-underscore-dangle
+      prefillTodoForm(createdTodoItem._id, createdTodoItem);
+      relabelFormButtons("Update");
+    }
+  });
+}
+
+function updateTodo(todoItem, showOverview) {
+  TodoService.updateTodo(
+    todoItem.id,
+    todoItem.title,
+    todoItem.importance,
+    todoItem.dueDate,
+    todoItem.finished,
+    todoItem.description
+  ).then(() => {
+    TodoService.getTodo(todoItem.id).then((updatedTodoItem) => {
       if (showOverview) {
         switchToOverview();
       } else {
         // eslint-disable-next-line no-underscore-dangle
-        prefillTodoForm(createdTodoItem._id, createdTodoItem);
-        relabelFormButtons("Update");
+        prefillTodoForm(updatedTodoItem._id, updatedTodoItem);
       }
     });
-}
-
-function updateTodo(todoItem, showOverview) {
-  TodoService
-    .updateTodo(
-      todoItem.id,
-      todoItem.title,
-      todoItem.importance,
-      todoItem.dueDate,
-      todoItem.finished,
-      todoItem.description
-    )
-    .then(() => {
-      TodoService.getTodo(todoItem.id).then((updatedTodoItem) => {
-        if (showOverview) {
-          switchToOverview();
-        } else {
-          // eslint-disable-next-line no-underscore-dangle
-          prefillTodoForm(updatedTodoItem._id, updatedTodoItem);
-        }
-      });
-    });
+  });
 }
 
 function initializeEditForm() {
@@ -195,7 +197,7 @@ function createEditElement(todoItem) {
   editButton.innerHTML = "Edit";
   editButton.classList.add("button-edit-todo");
   // eslint-disable-next-line no-underscore-dangle
-  editButton.id = todoItem._id;
+  editButton.id = todoItem.id;
   editButton.addEventListener("click", (event) => {
     prefillTodoForm(event.target.id, todoItem);
     relabelFormButtons("Update");
@@ -205,10 +207,10 @@ function createEditElement(todoItem) {
   return editDiv;
 }
 
-function renderTodos(response) {
+function renderTodos(todoItems) {
   document.getElementById("todo-item-container").innerHTML = "";
   const todosFragment = document.createDocumentFragment();
-  for (const todoItem of response) {
+  for (const todoItem of todoItems) {
     const todoDiv = document.createElement("div");
     todoDiv.classList.add("todo-item");
     todoDiv.appendChild(createDueDateElement(todoItem));
@@ -224,13 +226,41 @@ function renderTodos(response) {
 
 function loadAllTodos() {
   TodoService.getAllTodos().then((response) => {
-    renderTodos(response);
+    const allTodos = [];
+    response.forEach((responseTodo) => {
+      // eslint-disable-next-line no-underscore-dangle
+      const todoItem = new TodoItem(
+        responseTodo._id,
+        responseTodo.title,
+        responseTodo.importance,
+        responseTodo.dueDate,
+        responseTodo.finished,
+        responseTodo.description
+      );
+      allTodos.push(todoItem);
+    });
+    sessionStorage.setItem("todoItems", JSON.stringify(allTodos));
+    renderTodos(allTodos);
   });
 }
 
 function switchToOverview() {
   loadAllTodos();
   switchView();
+}
+
+function clearSortingSymbols() {
+  Array.from(document.getElementsByClassName("sort-state")).forEach(
+    (sortStateElement) => {
+      sortStateElement.classList.add("hidden");
+    }
+  );
+}
+
+function initializeSorting() {
+  clearSortingSymbols();
+  sessionStorage.setItem("sortOrder", "");
+  sessionStorage.setItem("sortAttribute", "");
 }
 
 function initialize() {
@@ -246,6 +276,32 @@ function initialize() {
   const overviewButton = document.getElementById("button-overview");
   overviewButton.addEventListener("click", () => {
     switchToOverview();
+  });
+
+  initializeSorting();
+
+  const sortByTitleButton = document.getElementById("button-sort-by-title");
+  sortByTitleButton.addEventListener("click", () => {
+    const allTodoItems = JSON.parse(sessionStorage.getItem("todoItems"));
+    clearSortingSymbols();
+    if (
+      sessionStorage.getItem("sortAttribute") === SORT_ATTR_TITLE &&
+      sessionStorage.getItem("sortOrder") === SORT_ORDER_ASC
+    ) {
+      sortByTitle(allTodoItems, SORT_ORDER_DESC);
+      sessionStorage.setItem("sortOrder", SORT_ORDER_DESC);
+      document
+        .querySelector("#button-sort-by-title .descending")
+        .classList.remove("hidden");
+    } else {
+      sortByTitle(allTodoItems, SORT_ORDER_ASC);
+      sessionStorage.setItem("sortOrder", SORT_ORDER_ASC);
+      document
+        .querySelector("#button-sort-by-title .ascending")
+        .classList.remove("hidden");
+    }
+    sessionStorage.setItem("sortAttribute", SORT_ATTR_TITLE);
+    renderTodos(allTodoItems);
   });
 }
 
