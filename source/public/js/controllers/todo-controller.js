@@ -1,6 +1,9 @@
 import { TodoService } from "../services/todo-service.js";
 import { TodoItem } from "../todo-item.js";
-import { getDifferenceInDaysFromNow } from "../utils/date-utils.js";
+import {
+  getDifferenceInDaysFromNow,
+  getTodayFormatted,
+} from "../utils/date-utils.js";
 import {
   SORT_ATTR_CREATION_DATE,
   SORT_ATTR_DUE_DATE,
@@ -50,7 +53,16 @@ function createTodoItemFromForm() {
   const dueDate = document.getElementById("todo-edit-due-date").value;
   const finished = document.getElementById("todo-edit-finished").checked;
   const description = document.getElementById("todo-edit-description").value;
-  return new TodoItem(id, title, importance, dueDate, finished, description);
+  const creationDate = getTodayFormatted();
+  return new TodoItem(
+    id,
+    title,
+    importance,
+    dueDate,
+    finished,
+    description,
+    creationDate
+  );
 }
 
 function prefillTodoForm(todoId, todoItem) {
@@ -72,7 +84,8 @@ function createTodo(todoItem, showOverview) {
     todoItem.importance,
     todoItem.dueDate,
     todoItem.finished,
-    todoItem.description
+    todoItem.description,
+    todoItem.creationDate
   ).then((createdTodoItem) => {
     if (showOverview) {
       switchToOverview();
@@ -215,7 +228,7 @@ function createEditElement(todoItem) {
 function renderTodos(todoItems) {
   document.getElementById("todo-item-container").innerHTML = "";
   const todosFragment = document.createDocumentFragment();
-  for (const todoItem of todoItems) {
+  todoItems.forEach(todoItem => {
     const todoDiv = document.createElement("div");
     todoDiv.classList.add("todo-item");
     todoDiv.appendChild(createDueDateElement(todoItem));
@@ -225,27 +238,28 @@ function renderTodos(todoItems) {
     todoDiv.appendChild(createDescriptionElement(todoItem));
     todoDiv.appendChild(createEditElement(todoItem));
     todosFragment.appendChild(todoDiv);
-  }
+  });
   document.getElementById("todo-item-container").appendChild(todosFragment);
 }
 
 function loadAllTodos() {
   TodoService.getAllTodos().then((response) => {
-    const allTodos = [];
+    const allTodoItems = [];
     response.forEach((responseTodo) => {
-      // eslint-disable-next-line no-underscore-dangle
       const todoItem = new TodoItem(
+        // eslint-disable-next-line no-underscore-dangle
         responseTodo._id,
         responseTodo.title,
         responseTodo.importance,
         responseTodo.dueDate,
         responseTodo.finished,
-        responseTodo.description
+        responseTodo.description,
+        responseTodo.creationDate
       );
-      allTodos.push(todoItem);
+      allTodoItems.push(todoItem);
     });
-    sessionStorage.setItem("todoItems", JSON.stringify(allTodos));
-    renderTodos(allTodos);
+    sessionStorage.setItem("todoItems", JSON.stringify(allTodoItems));
+    renderTodos(allTodoItems);
   });
 }
 

@@ -8,7 +8,8 @@ export class TodoController {
       newTodo.importance,
       newTodo.dueDate,
       newTodo.finished,
-      newTodo.description
+      newTodo.description,
+      newTodo.creationDate
     );
     res.location("/todos/" + addedTodo._id);
     res.status(201);

@@ -1,10 +1,19 @@
 /* global moment */
+
+function getToday() {
+  return moment(new Date());
+}
+
+export function getTodayFormatted() {
+  return getToday().format("YYYY-MM-DD");
+}
+
 export function getDifferenceInDaysFromNow(dateToCompare) {
   if (!dateToCompare) {
     return "someday";
   }
   const date = moment(dateToCompare).startOf("day");
-  const today = moment(new Date()).startOf("day");
+  const today = getToday().startOf("day");
   const dateToday = moment(date).isSame(today, "day");
   if (dateToday) {
     return "today";
@@ -23,3 +32,4 @@ export function getDifferenceInDaysFromNow(dateToCompare) {
   }
   return `${differenceInDays} days ago`;
 }
+

@@ -1,17 +1,32 @@
 import { HttpService } from "./http-service.js";
 
 export class TodoService {
-  static async createTodo(title, importance, dueDate, finished, description) {
+  static async createTodo(
+    title,
+    importance,
+    dueDate,
+    finished,
+    description,
+    creationDate
+  ) {
     return HttpService.ajax("POST", "/todos/", {
       title,
       importance,
       dueDate,
       finished,
       description,
+      creationDate,
     });
   }
 
-  static async updateTodo(id, title, importance, dueDate, finished, description) {
+  static async updateTodo(
+    id,
+    title,
+    importance,
+    dueDate,
+    finished,
+    description
+  ) {
     return HttpService.ajax("PUT", "/todos/", {
       id,
       title,
