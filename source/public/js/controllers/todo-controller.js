@@ -347,6 +347,13 @@ function determineNewSortOrder(sortAttribute) {
   return newSortOrder;
 }
 
+function applySorting(sortAttribute) {
+  const newSortOrder = determineNewSortOrder(sortAttribute);
+  const sortedTodoItems = sortTodoItemsBy(sortAttribute, newSortOrder);
+  sessionStorage.setItem("todoItems", JSON.stringify(sortedTodoItems));
+  renderTodosFromStorage();
+}
+
 async function initialize() {
   await loadAllTodos();
   renderTodosFromStorage();
@@ -367,43 +374,28 @@ async function initialize() {
 
   const sortByTitleButton = document.getElementById("button-sort-by-title");
   sortByTitleButton.addEventListener("click", () => {
-    const newSortOrder = determineNewSortOrder(SORT_ATTR_TITLE);
-    const sortedTodoItems = sortTodoItemsBy(SORT_ATTR_TITLE, newSortOrder);
-    sessionStorage.setItem("todoItems", JSON.stringify(sortedTodoItems));
-    renderTodosFromStorage();
+    applySorting(SORT_ATTR_TITLE);
   });
 
   const sortByDueDateButton = document.getElementById(
     "button-sort-by-due-date"
   );
   sortByDueDateButton.addEventListener("click", () => {
-    const newSortOrder = determineNewSortOrder(SORT_ATTR_DUE_DATE);
-    const sortedTodoItems = sortTodoItemsBy(SORT_ATTR_DUE_DATE, newSortOrder);
-    sessionStorage.setItem("todoItems", JSON.stringify(sortedTodoItems));
-    renderTodosFromStorage();
+    applySorting(SORT_ATTR_DUE_DATE);
   });
 
   const sortByCreationDateButton = document.getElementById(
     "button-sort-by-creation-date"
   );
   sortByCreationDateButton.addEventListener("click", () => {
-    const newSortOrder = determineNewSortOrder(SORT_ATTR_CREATION_DATE);
-    const sortedTodoItems = sortTodoItemsBy(
-      SORT_ATTR_CREATION_DATE,
-      newSortOrder
-    );
-    sessionStorage.setItem("todoItems", JSON.stringify(sortedTodoItems));
-    renderTodosFromStorage();
+    applySorting(SORT_ATTR_CREATION_DATE);
   });
 
   const sortByImportanceButton = document.getElementById(
     "button-sort-by-importance"
   );
   sortByImportanceButton.addEventListener("click", () => {
-    const newSortOrder = determineNewSortOrder(SORT_ATTR_IMPORTANCE);
-    const sortedTodoItems = sortTodoItemsBy(SORT_ATTR_IMPORTANCE, newSortOrder);
-    sessionStorage.setItem("todoItems", JSON.stringify(sortedTodoItems));
-    renderTodosFromStorage();
+    applySorting(SORT_ATTR_IMPORTANCE);
   });
 
   const filterCompletedButton = document.getElementById(
