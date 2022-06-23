@@ -13,7 +13,7 @@ export class TodoStore {
       importance,
       dueDate,
       finished,
-      description
+      description,
     });
   }
 
@@ -26,14 +26,14 @@ export class TodoStore {
         importance,
         dueDate,
         finished,
-        description
+        description,
       }
     );
   }
 
-  // async get(id, currentUser) {
-  //   return this.db.findOne({ _id: id, orderedBy: currentUser });
-  // }
+  async getTodo(id) {
+    return this.database.findOne({ _id: id });
+  }
 
   async getAllTodos() {
     return (

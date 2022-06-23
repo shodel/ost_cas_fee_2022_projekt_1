@@ -3,15 +3,16 @@ import { todoStore } from "../services/todo-store.js";
 export class TodoController {
   createTodo = async (req, res) => {
     const newTodo = req.body;
-    res.json(
-      await todoStore.addTodo(
-        newTodo.title,
-        newTodo.importance,
-        newTodo.dueDate,
-        newTodo.finished,
-        newTodo.description
-      )
+    let addedTodo = await todoStore.addTodo(
+      newTodo.title,
+      newTodo.importance,
+      newTodo.dueDate,
+      newTodo.finished,
+      newTodo.description
     );
+    res.location("/todos/" + addedTodo._id);
+    res.status(201);
+    res.json(addedTodo);
   };
 
   updateTodo = async (req, res) => {
@@ -32,9 +33,9 @@ export class TodoController {
     res.json(await todoStore.getAllTodos());
   };
 
-  // getTodo = async (req, res) => {
-  //   res.json(await orderStore.get(req.params.id, SecurityUtil.currentUser(req)));
-  // };
+  getTodo = async (req, res) => {
+    res.json(await todoStore.getTodo(req.params.id));
+  };
 }
 
 export const todoController = new TodoController();

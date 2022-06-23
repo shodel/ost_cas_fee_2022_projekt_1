@@ -2,12 +2,10 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Note App</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js"
-          integrity="sha256-/PJBs6QWvXijOFIX04kZpLb6ZtSQckdOIavLWKKOgXU="
-          crossorigin="anonymous" defer></script>
+  <title>ToDo App</title>
   <script src="js/controllers/index-controller.js" type="module"></script>
   <script src="js/controllers/todo-controller.js" type="module"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +15,7 @@
   <link rel="stylesheet" href="css/flex.css">
 </head>
 <body>
-<h1>Note App</h1>
+<h1>ToDo App</h1>
 <div id="todo-overview">
   <div class="flex-container-row margin-bottom-default">
     <button id="button-create-new-todo" type="button">Create new ToDo</button>
@@ -65,8 +63,8 @@
       <textarea id="todo-edit-description" class="full-width margin-bottom-default"></textarea>
     </div>
     <div class="todo-actions flex-container-row">
-      <button id="button-create-update-todo" type="submit">Update</button>
-      <button type="submit">Update & Overview</button>
+      <button id="button-create-update-todo" type="submit">Create</button>
+      <button id="button-create-update-todo-overview" type="submit">Create & Overview</button>
       <button id="button-overview" type="button">Overview</button>
     </div>
   </form>

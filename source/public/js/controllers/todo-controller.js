@@ -1,27 +1,36 @@
-// import { formatDistance } from "date-fns";
-import { todoService } from "../services/todo-service.js";
-import { indexController } from "./index-controller.js";
+import { TodoService } from "../services/todo-service.js";
+import { TodoItem } from "../todo-item.js";
+import { getDifferenceInDaysFromNow } from "../utils/date-utils.js";
 
-// const orderContainer = document.querySelector("#orderContainer");
-// const orderRenderer = Handlebars.compile(document.querySelector("#order-template").innerHTML);
+function switchView() {
+  const todoOverview = document.getElementById("todo-overview");
+  todoOverview.classList.toggle("hidden");
+  const todoEdit = document.getElementById("todo-edit");
+  todoEdit.classList.toggle("hidden");
+}
 
-// const orderId = window.location.hash.substring(1);
+function relabelFormButtons(submitMode) {
+  if (submitMode === "Create" || submitMode === "Update") {
+    const createUpdateTodoButton = document.getElementById(
+      "button-create-update-todo"
+    );
+    const createUpdateTodoOverviewButton = document.getElementById(
+      "button-create-update-todo-overview"
+    );
+    createUpdateTodoButton.innerHTML = submitMode;
+    createUpdateTodoOverviewButton.innerHTML = `${submitMode} & Overview`;
+  }
+}
 
-// async function renderOrder() {
-//   orderContainer.innerHTML = orderRenderer(await orderService.getOrder(orderId))
-// }
+function isTodoFormValid() {
+  return document.getElementById("todo-edit-form").checkValidity();
+}
 
-// orderContainer.addEventListener("click", async event => {
-//   if (event.target.classList.contains("js-delete")) {
-//     // await orderService.deleteOrder(event.target.dataset.id);
-//     // renderOrder()
-//   }
-// });
+function showFormErrorMessages() {
+  return document.getElementById("todo-edit-form").reportValidity();
+}
 
-const createUpdateTodoButton = document.getElementById(
-  "button-create-update-todo"
-);
-createUpdateTodoButton.addEventListener("click", () => {
+function createTodoItemFromForm() {
   const id = document.getElementById("todo-edit-id").value;
   const title = document.getElementById("todo-edit-title").value;
   const importance = Number(
@@ -30,32 +39,105 @@ createUpdateTodoButton.addEventListener("click", () => {
   const dueDate = document.getElementById("todo-edit-due-date").value;
   const finished = document.getElementById("todo-edit-finished").checked;
   const description = document.getElementById("todo-edit-description").value;
-  const inputsValid = document.getElementById("todo-edit-form").checkValidity();
-  if (inputsValid) {
-    if (!id) {
-      todoService.createTodo(title, importance, dueDate, finished, description);
+  return new TodoItem(id, title, importance, dueDate, finished, description);
+}
+
+function prefillTodoForm(todoId, todoItem) {
+  document.getElementById("todo-edit-id").value = todoId;
+  document.getElementById("todo-edit-title").value = todoItem.title;
+  document.getElementById("todo-edit-importance").value = todoItem.importance;
+  document.getElementById("todo-edit-due-date").value = todoItem.dueDate;
+  document.getElementById("todo-edit-finished").checked = todoItem.finished;
+  document.getElementById("todo-edit-description").value = todoItem.description;
+}
+
+function clearTodoForm() {
+  document.getElementById("todo-edit-form").reset();
+}
+
+function createTodo(todoItem, showOverview) {
+  TodoService
+    .createTodo(
+      todoItem.title,
+      todoItem.importance,
+      todoItem.dueDate,
+      todoItem.finished,
+      todoItem.description
+    )
+    .then((createdTodoItem) => {
+      if (showOverview) {
+        switchToOverview();
+      } else {
+        // eslint-disable-next-line no-underscore-dangle
+        prefillTodoForm(createdTodoItem._id, createdTodoItem);
+        relabelFormButtons("Update");
+      }
+    });
+}
+
+function updateTodo(todoItem, showOverview) {
+  TodoService
+    .updateTodo(
+      todoItem.id,
+      todoItem.title,
+      todoItem.importance,
+      todoItem.dueDate,
+      todoItem.finished,
+      todoItem.description
+    )
+    .then(() => {
+      TodoService.getTodo(todoItem.id).then((updatedTodoItem) => {
+        if (showOverview) {
+          switchToOverview();
+        } else {
+          // eslint-disable-next-line no-underscore-dangle
+          prefillTodoForm(updatedTodoItem._id, updatedTodoItem);
+        }
+      });
+    });
+}
+
+function initializeEditForm() {
+  const createUpdateTodoButton = document.getElementById(
+    "button-create-update-todo"
+  );
+  createUpdateTodoButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (isTodoFormValid()) {
+      const todoItem = createTodoItemFromForm();
+      if (!todoItem.id) {
+        createTodo(todoItem, false);
+      } else {
+        updateTodo(todoItem, false);
+      }
     } else {
-      todoService.updateTodo(
-        id,
-        title,
-        importance,
-        dueDate,
-        finished,
-        description
-      );
+      showFormErrorMessages();
     }
-    console.log(`todoId = ${id}`);
-  }
-});
+  });
+
+  const createUpdateTodoOverviewButton = document.getElementById(
+    "button-create-update-todo-overview"
+  );
+  createUpdateTodoOverviewButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (isTodoFormValid()) {
+      const todoItem = createTodoItemFromForm();
+      if (!todoItem.id) {
+        createTodo(todoItem, true);
+      } else {
+        updateTodo(todoItem, true);
+      }
+    } else {
+      showFormErrorMessages();
+    }
+  });
+}
 
 function createDueDateElement(todoItem) {
   const dueDateDiv = document.createElement("div");
   dueDateDiv.classList.add("todo-item-due-date");
-  // const dueIn = formatDistance(todoItem.dueDate, new Date(), {
-  //   addSuffix: true,
-  // });
-  // dueDateDiv.innerHTML = dueIn;
-  dueDateDiv.innerHTML = todoItem.dueDate;
+  const dueIn = getDifferenceInDaysFromNow(todoItem.dueDate);
+  dueDateDiv.innerHTML = dueIn;
   return dueDateDiv;
 }
 
@@ -105,15 +187,6 @@ function createDescriptionElement(todoItem) {
   return descriptionDiv;
 }
 
-function prefillTodoForm(todoId, todoItem) {
-  document.getElementById("todo-edit-id").value = todoId;
-  document.getElementById("todo-edit-title").value = todoItem.title;
-  document.getElementById("todo-edit-importance").value = todoItem.importance;
-  document.getElementById("todo-edit-due-date").value = todoItem.dueDate;
-  document.getElementById("todo-edit-finished").checked = todoItem.finished;
-  document.getElementById("todo-edit-description").value = todoItem.description;
-}
-
 function createEditElement(todoItem) {
   const editDiv = document.createElement("div");
   editDiv.classList.add("todo-item-edit");
@@ -125,13 +198,15 @@ function createEditElement(todoItem) {
   editButton.id = todoItem._id;
   editButton.addEventListener("click", (event) => {
     prefillTodoForm(event.target.id, todoItem);
-    indexController.switchView();
+    relabelFormButtons("Update");
+    switchView();
   });
   editDiv.appendChild(editButton);
   return editDiv;
 }
 
 function renderTodos(response) {
+  document.getElementById("todo-item-container").innerHTML = "";
   const todosFragment = document.createDocumentFragment();
   for (const todoItem of response) {
     const todoDiv = document.createElement("div");
@@ -147,6 +222,31 @@ function renderTodos(response) {
   document.getElementById("todo-item-container").appendChild(todosFragment);
 }
 
-todoService.getAllTodos().then((response) => {
-  renderTodos(response);
-});
+function loadAllTodos() {
+  TodoService.getAllTodos().then((response) => {
+    renderTodos(response);
+  });
+}
+
+function switchToOverview() {
+  loadAllTodos();
+  switchView();
+}
+
+function initialize() {
+  loadAllTodos();
+  initializeEditForm();
+  const createNewTodoButton = document.getElementById("button-create-new-todo");
+  createNewTodoButton.addEventListener("click", () => {
+    clearTodoForm();
+    relabelFormButtons("Create");
+    switchView();
+  });
+
+  const overviewButton = document.getElementById("button-overview");
+  overviewButton.addEventListener("click", () => {
+    switchToOverview();
+  });
+}
+
+initialize();

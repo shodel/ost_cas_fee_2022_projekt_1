@@ -1,38 +1,32 @@
-import { httpService } from "./http-service.js";
+import { HttpService } from "./http-service.js";
 
-class TodoService {
-  async createTodo(title, importance, dueDate, finished, description) {
-    return httpService.ajax("POST", "/todos/", {
+export class TodoService {
+  static async createTodo(title, importance, dueDate, finished, description) {
+    return HttpService.ajax("POST", "/todos/", {
       title,
       importance,
       dueDate,
       finished,
-      description
+      description,
     });
   }
 
-  async updateTodo(id, title, importance, dueDate, finished, description) {
-    return httpService.ajax("PUT", "/todos/", {
+  static async updateTodo(id, title, importance, dueDate, finished, description) {
+    return HttpService.ajax("PUT", "/todos/", {
       id,
       title,
       importance,
       dueDate,
       finished,
-      description
+      description,
     });
   }
 
-  async getAllTodos() {
-    return httpService.ajax("GET", "/todos/");
+  static async getAllTodos() {
+    return HttpService.ajax("GET", "/todos/");
   }
 
-  // async getOrder(id) {
-  //   return httpService.ajax("GET", `/todos/${id}`, undefined);
-  // }
-  //
-  // async deleteOrder(id) {
-  //   return httpService.ajax("DELETE", `/todos/${id}`, undefined);
-  // }
+  static async getTodo(id) {
+    return HttpService.ajax("GET", `/todos/${id}`);
+  }
 }
-
-export const todoService = new TodoService();
