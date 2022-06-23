@@ -226,7 +226,8 @@ function createEditElement(todoItem) {
   return editDiv;
 }
 
-function renderTodos(todoItems) {
+function renderTodosFromStorage() {
+  const todoItems = JSON.parse(sessionStorage.getItem("todoItems"));
   document.getElementById("todo-item-container").innerHTML = "";
   const todosFragment = document.createDocumentFragment();
   todoItems.forEach((todoItem) => {
@@ -321,13 +322,11 @@ async function switchToOverview() {
   await loadAllTodos();
   const sortAttribute = sessionStorage.getItem("sortAttribute");
   const sortOrder = sessionStorage.getItem("sortOrder");
-  let todoItems;
   if (sortAttribute && sortOrder) {
-    todoItems = sortTodoItemsBy(sortAttribute, sortOrder);
-  } else {
-    todoItems = JSON.parse(sessionStorage.getItem("todoItems"));
+    const todoItems = sortTodoItemsBy(sortAttribute, sortOrder);
+    sessionStorage.setItem("todoItems", JSON.stringify(todoItems));
   }
-  renderTodos(todoItems);
+  renderTodosFromStorage();
   switchView();
 }
 
@@ -350,8 +349,7 @@ function determineNewSortOrder(sortAttribute) {
 
 async function initialize() {
   await loadAllTodos();
-  const allTodoItems = JSON.parse(sessionStorage.getItem("todoItems"));
-  renderTodos(allTodoItems);
+  renderTodosFromStorage();
   initializeEditForm();
   const createNewTodoButton = document.getElementById("button-create-new-todo");
   createNewTodoButton.addEventListener("click", () => {
@@ -371,7 +369,8 @@ async function initialize() {
   sortByTitleButton.addEventListener("click", () => {
     const newSortOrder = determineNewSortOrder(SORT_ATTR_TITLE);
     const sortedTodoItems = sortTodoItemsBy(SORT_ATTR_TITLE, newSortOrder);
-    renderTodos(sortedTodoItems);
+    sessionStorage.setItem("todoItems", JSON.stringify(sortedTodoItems));
+    renderTodosFromStorage();
   });
 
   const sortByDueDateButton = document.getElementById(
@@ -380,7 +379,8 @@ async function initialize() {
   sortByDueDateButton.addEventListener("click", () => {
     const newSortOrder = determineNewSortOrder(SORT_ATTR_DUE_DATE);
     const sortedTodoItems = sortTodoItemsBy(SORT_ATTR_DUE_DATE, newSortOrder);
-    renderTodos(sortedTodoItems);
+    sessionStorage.setItem("todoItems", JSON.stringify(sortedTodoItems));
+    renderTodosFromStorage();
   });
 
   const sortByCreationDateButton = document.getElementById(
@@ -392,7 +392,8 @@ async function initialize() {
       SORT_ATTR_CREATION_DATE,
       newSortOrder
     );
-    renderTodos(sortedTodoItems);
+    sessionStorage.setItem("todoItems", JSON.stringify(sortedTodoItems));
+    renderTodosFromStorage();
   });
 
   const sortByImportanceButton = document.getElementById(
@@ -401,7 +402,19 @@ async function initialize() {
   sortByImportanceButton.addEventListener("click", () => {
     const newSortOrder = determineNewSortOrder(SORT_ATTR_IMPORTANCE);
     const sortedTodoItems = sortTodoItemsBy(SORT_ATTR_IMPORTANCE, newSortOrder);
-    renderTodos(sortedTodoItems);
+    sessionStorage.setItem("todoItems", JSON.stringify(sortedTodoItems));
+    renderTodosFromStorage();
+  });
+
+  const filterCompletedButton = document.getElementById(
+    "button-filter-completed"
+  );
+  filterCompletedButton.addEventListener("click", () => {
+    if (filterCompletedButton.classList.contains("active")) {
+      filterCompletedButton.classList.remove("active");
+    } else {
+      filterCompletedButton.classList.add("active");
+    }
   });
 }
 
