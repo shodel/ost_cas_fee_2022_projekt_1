@@ -2,9 +2,14 @@ import { TodoService } from "../services/todo-service.js";
 import { TodoItem } from "../todo-item.js";
 import { getDifferenceInDaysFromNow } from "../utils/date-utils.js";
 import {
+  SORT_ATTR_CREATION_DATE,
+  SORT_ATTR_DUE_DATE,
+  SORT_ATTR_IMPORTANCE,
   SORT_ATTR_TITLE,
   SORT_ORDER_ASC,
   SORT_ORDER_DESC,
+  sortByDueDate,
+  sortByImportance,
   sortByTitle,
 } from "../utils/sort-utils.js";
 
@@ -263,6 +268,42 @@ function initializeSorting() {
   sessionStorage.setItem("sortAttribute", "");
 }
 
+function sortBy(sortAttribute) {
+  let newSortOrder = SORT_ORDER_ASC;
+  if (
+    sessionStorage.getItem("sortAttribute") === sortAttribute &&
+    sessionStorage.getItem("sortOrder") === SORT_ORDER_ASC
+  ) {
+    newSortOrder = SORT_ORDER_DESC;
+  }
+
+  const allTodoItems = JSON.parse(sessionStorage.getItem("todoItems"));
+  switch (sortAttribute) {
+    case SORT_ATTR_TITLE:
+      sortByTitle(allTodoItems, newSortOrder);
+      break;
+    case SORT_ATTR_DUE_DATE:
+      sortByDueDate(allTodoItems, newSortOrder);
+      break;
+    case SORT_ATTR_CREATION_DATE:
+      break;
+    case SORT_ATTR_IMPORTANCE:
+      sortByImportance(allTodoItems, newSortOrder);
+      break;
+    default:
+      break;
+  }
+
+  clearSortingSymbols();
+  document
+    .querySelector(`#button-sort-by-${sortAttribute} .${newSortOrder}`)
+    .classList.remove("hidden");
+  sessionStorage.setItem("sortOrder", newSortOrder);
+  sessionStorage.setItem("sortAttribute", sortAttribute);
+
+  renderTodos(allTodoItems);
+}
+
 function initialize() {
   loadAllTodos();
   initializeEditForm();
@@ -282,26 +323,21 @@ function initialize() {
 
   const sortByTitleButton = document.getElementById("button-sort-by-title");
   sortByTitleButton.addEventListener("click", () => {
-    const allTodoItems = JSON.parse(sessionStorage.getItem("todoItems"));
-    clearSortingSymbols();
-    if (
-      sessionStorage.getItem("sortAttribute") === SORT_ATTR_TITLE &&
-      sessionStorage.getItem("sortOrder") === SORT_ORDER_ASC
-    ) {
-      sortByTitle(allTodoItems, SORT_ORDER_DESC);
-      sessionStorage.setItem("sortOrder", SORT_ORDER_DESC);
-      document
-        .querySelector("#button-sort-by-title .descending")
-        .classList.remove("hidden");
-    } else {
-      sortByTitle(allTodoItems, SORT_ORDER_ASC);
-      sessionStorage.setItem("sortOrder", SORT_ORDER_ASC);
-      document
-        .querySelector("#button-sort-by-title .ascending")
-        .classList.remove("hidden");
-    }
-    sessionStorage.setItem("sortAttribute", SORT_ATTR_TITLE);
-    renderTodos(allTodoItems);
+    sortBy(SORT_ATTR_TITLE);
+  });
+
+  const sortByDueDateButton = document.getElementById(
+    "button-sort-by-due-date"
+  );
+  sortByDueDateButton.addEventListener("click", () => {
+    sortBy(SORT_ATTR_DUE_DATE);
+  });
+
+  const sortByImportanceButton = document.getElementById(
+    "button-sort-by-importance"
+  );
+  sortByImportanceButton.addEventListener("click", () => {
+    sortBy(SORT_ATTR_IMPORTANCE);
   });
 }
 
