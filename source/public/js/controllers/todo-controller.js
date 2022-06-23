@@ -271,6 +271,19 @@ function clearSortingSymbols() {
   );
 }
 
+function clearActiveSortButtons() {
+  Array.from(document.getElementsByClassName("sort-button")).forEach(
+    (sortButton) => {
+      sortButton.classList.remove("active");
+    }
+  );
+}
+
+function resetSortingStyle() {
+  clearSortingSymbols();
+  clearActiveSortButtons();
+}
+
 function sortTodoItemsBy(sortAttribute, sortOrder) {
   const sortedTodoItems = JSON.parse(sessionStorage.getItem("todoItems"));
   switch (sortAttribute) {
@@ -290,10 +303,14 @@ function sortTodoItemsBy(sortAttribute, sortOrder) {
       break;
   }
 
-  clearSortingSymbols();
+  resetSortingStyle();
+  document
+    .getElementById(`button-sort-by-${sortAttribute}`)
+    .classList.add("active");
   document
     .querySelector(`#button-sort-by-${sortAttribute} .${sortOrder}`)
     .classList.remove("hidden");
+
   sessionStorage.setItem("sortOrder", sortOrder);
   sessionStorage.setItem("sortAttribute", sortAttribute);
 
@@ -315,7 +332,7 @@ async function switchToOverview() {
 }
 
 function initializeSorting() {
-  clearSortingSymbols();
+  resetSortingStyle();
   sessionStorage.setItem("sortOrder", "");
   sessionStorage.setItem("sortAttribute", "");
 }

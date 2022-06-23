@@ -64,6 +64,11 @@ button {
     font-family: Heebo, Helvetica, sans-serif;
 }
 
+.active {
+    background-color: #0957c6;
+    font-weight: bold;
+}
+
 input[type="checkbox"] {
     margin-left: 0;
 }
