@@ -241,18 +241,23 @@ function renderTodosFromStorage() {
   document.getElementById("todo-item-container").innerHTML = "";
   const todosFragment = document.createDocumentFragment();
   const filteredTodoItems = applyCompleteFilter(todoItems);
-  filteredTodoItems.forEach((todoItem) => {
-    const todoDiv = document.createElement("div");
-    todoDiv.classList.add("todo-item");
-    todoDiv.appendChild(createDueDateElement(todoItem));
-    todoDiv.appendChild(createTitleElement(todoItem));
-    todoDiv.appendChild(createImportanceElement(todoItem));
-    todoDiv.appendChild(createStateElement(todoItem));
-    todoDiv.appendChild(createDescriptionElement(todoItem));
-    todoDiv.appendChild(createEditElement(todoItem));
-    todosFragment.appendChild(todoDiv);
-  });
-  document.getElementById("todo-item-container").appendChild(todosFragment);
+  if (filteredTodoItems.length < 1) {
+    document.getElementById("no-todos").classList.remove("hidden");
+  } else {
+    document.getElementById("no-todos").classList.add("hidden");
+    filteredTodoItems.forEach((todoItem) => {
+      const todoDiv = document.createElement("div");
+      todoDiv.classList.add("todo-item");
+      todoDiv.appendChild(createDueDateElement(todoItem));
+      todoDiv.appendChild(createTitleElement(todoItem));
+      todoDiv.appendChild(createImportanceElement(todoItem));
+      todoDiv.appendChild(createStateElement(todoItem));
+      todoDiv.appendChild(createDescriptionElement(todoItem));
+      todoDiv.appendChild(createEditElement(todoItem));
+      todosFragment.appendChild(todoDiv);
+    });
+    document.getElementById("todo-item-container").appendChild(todosFragment);
+  }
 }
 
 function loadAllTodos() {
