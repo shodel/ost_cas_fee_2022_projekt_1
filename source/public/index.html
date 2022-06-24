@@ -13,7 +13,9 @@
 
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/flex.css">
+  <link rel="stylesheet" href="css/todo-item.css">
 </head>
+
 <body>
 <h1>ToDo App</h1>
 <div id="todo-overview">
@@ -23,37 +25,28 @@
   </div>
   <div class="flex-container-row margin-bottom-default">
     <button id="button-sort-by-title" class="sort-button" type="button">
-      <span class="sort-attribute-prefix">By </span>Name <span class="sort-state ascending">▲</span><span class="sort-state descending">▼</span>
+      <span class="sort-attribute-prefix">By </span>Name <span class="sort-state ascending">▲</span><span
+      class="sort-state descending">▼</span>
     </button>
     <button id="button-sort-by-due-date" class="sort-button" type="button">
-      <span class="sort-attribute-prefix">By </span>Due Date <span class="sort-state ascending">▲</span><span class="sort-state descending">▼</span>
+      <span class="sort-attribute-prefix">By </span>Due Date <span class="sort-state ascending">▲</span><span
+      class="sort-state descending">▼</span>
     </button>
     <button id="button-sort-by-creation-date" class="sort-button" type="button">
-      <span class="sort-attribute-prefix">By </span>Creation Date <span class="sort-state ascending">▲</span><span class="sort-state descending">▼</span>
+      <span class="sort-attribute-prefix">By </span>Creation Date <span class="sort-state ascending">▲</span><span
+      class="sort-state descending">▼</span>
     </button>
     <button id="button-sort-by-importance" class="sort-button" type="button">
-      <span class="sort-attribute-prefix">By </span>Importance <span class="sort-state ascending">▲</span><span class="sort-state descending">▼</span>
+      <span class="sort-attribute-prefix">By </span>Importance <span class="sort-state ascending">▲</span><span
+      class="sort-state descending">▼</span>
     </button>
     <button id="button-filter-completed" class="flex-item-end" type="button">Filter completed</button>
   </div>
   <div id="todo-item-container" class="flex-container-column">
   </div>
   <div id="no-todos">Keine ToDos gefunden.</div>
-
-  <!--  <script id="todos-template" type="text/x-handlebars-template">-->
-  <!--    {{#each this}}-->
-  <!--    <div class="todo-item">-->
-  <!--      <div class="todo-item-due-date">in a day</div>-->
-  <!--      <div class="todo-item-title">Geburi von Sarah</div>-->
-  <!--      <div class="todo-item-importance">⚡⚡⚡⚡⚡</div>-->
-  <!--      <div class="todo-item-state">✅ Completed</div>-->
-  <!--      <div class="todo-item-description">Anrufen</div>-->
-  <!--      <div class="todo-item-edit">-->
-  <!--        <button type="button">Edit</button>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--  </script>-->
 </div>
+
 <div id="todo-edit" class="flex-item-grow-1 hidden">
   <form id="todo-edit-form">
     <div class="todo-form">

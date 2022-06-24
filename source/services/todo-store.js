@@ -6,20 +6,33 @@ export class TodoStore {
     this.database = database || new Datastore(options);
   }
 
-  async addTodo(title, importance, dueDate, finished, description, creationDate) {
-    console.log(`todo inserted, title = ${title}`);
+  async addTodo(
+    title,
+    importance,
+    dueDate,
+    finished,
+    description,
+    creationDate
+  ) {
     return this.database.insert({
       title,
       importance,
       dueDate,
       finished,
       description,
-      creationDate
+      creationDate,
     });
   }
 
-  async updateTodo(id, title, importance, dueDate, finished, description) {
-    console.log(`todo updated, id = ${id}`);
+  async updateTodo(
+    id,
+    title,
+    importance,
+    dueDate,
+    finished,
+    description,
+    creationDate
+  ) {
     return this.database.update(
       { _id: id },
       {
@@ -28,6 +41,7 @@ export class TodoStore {
         dueDate,
         finished,
         description,
+        creationDate,
       }
     );
   }

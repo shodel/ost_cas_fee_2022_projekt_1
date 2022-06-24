@@ -1,8 +1,7 @@
 {
-  "name": "cas-fee-projekt-1-starter-template",
+  "name": "cas-fee-22-projekt-1-simon-hodel",
   "version": "1.0.0",
-  "description": "Testat template",
-  "main": "public/scripts/main.js",
+  "description": "CAS FEE 22, Projekt 1: ToDo-Applikation",
   "type": "module",
   "scripts": {
     "start": "node index.js",

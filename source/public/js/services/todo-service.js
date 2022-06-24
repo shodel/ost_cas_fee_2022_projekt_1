@@ -25,7 +25,8 @@ export class TodoService {
     importance,
     dueDate,
     finished,
-    description
+    description,
+    creationDate
   ) {
     return HttpService.ajax("PUT", "/todos/", {
       id,
@@ -34,6 +35,7 @@ export class TodoService {
       dueDate,
       finished,
       description,
+      creationDate
     });
   }
 

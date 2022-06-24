@@ -1,9 +1,9 @@
 import { todoStore } from "../services/todo-store.js";
 
 export class TodoController {
-  createTodo = async (req, res) => {
+  static async createTodo(req, res) {
     const newTodo = req.body;
-    let addedTodo = await todoStore.addTodo(
+    const addedTodo = await todoStore.addTodo(
       newTodo.title,
       newTodo.importance,
       newTodo.dueDate,
@@ -11,12 +11,13 @@ export class TodoController {
       newTodo.description,
       newTodo.creationDate
     );
-    res.location("/todos/" + addedTodo._id);
+    // eslint-disable-next-line no-underscore-dangle
+    res.location(`/todos/${addedTodo._id}`);
     res.status(201);
     res.json(addedTodo);
-  };
+  }
 
-  updateTodo = async (req, res) => {
+  static async updateTodo(req, res) {
     const todoToUpdate = req.body;
     res.json(
       await todoStore.updateTodo(
@@ -25,18 +26,17 @@ export class TodoController {
         todoToUpdate.importance,
         todoToUpdate.dueDate,
         todoToUpdate.finished,
-        todoToUpdate.description
+        todoToUpdate.description,
+        todoToUpdate.creationDate
       )
     );
-  };
+  }
 
-  getAllTodos = async (req, res) => {
+  static async getAllTodos(req, res) {
     res.json(await todoStore.getAllTodos());
-  };
+  }
 
-  getTodo = async (req, res) => {
+  static async getTodo(req, res) {
     res.json(await todoStore.getTodo(req.params.id));
-  };
+  }
 }
-
-export const todoController = new TodoController();

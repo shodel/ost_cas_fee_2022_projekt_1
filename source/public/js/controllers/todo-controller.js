@@ -1,5 +1,5 @@
 import { TodoService } from "../services/todo-service.js";
-import { TodoItem } from "../todo-item.js";
+import { TodoItem } from "../services/todo-item.js";
 import {
   getDifferenceInDaysFromNow,
   getTodayFormatted,
@@ -105,7 +105,8 @@ function updateTodo(todoItem, showOverview) {
     todoItem.importance,
     todoItem.dueDate,
     todoItem.finished,
-    todoItem.description
+    todoItem.description,
+    todoItem.creationDate
   ).then(() => {
     TodoService.getTodo(todoItem.id).then((updatedTodoItem) => {
       if (showOverview) {
@@ -246,6 +247,9 @@ function renderTodosFromStorage() {
     filteredTodoItems.forEach((todoItem) => {
       const todoDiv = document.createElement("div");
       todoDiv.classList.add("todo-item");
+      if (document.body.classList.contains("alternative-theme")) {
+        todoDiv.classList.add("alternative-border-color");
+      }
       todoDiv.appendChild(createDueDateElement(todoItem));
       todoDiv.appendChild(createTitleElement(todoItem));
       todoDiv.appendChild(createImportanceElement(todoItem));
