@@ -215,7 +215,6 @@ function createEditElement(todoItem) {
   editButton.type = "button";
   editButton.innerHTML = "Edit";
   editButton.classList.add("button-edit-todo");
-  // eslint-disable-next-line no-underscore-dangle
   editButton.id = todoItem.id;
   editButton.addEventListener("click", (event) => {
     prefillTodoForm(event.target.id, todoItem);
@@ -280,7 +279,7 @@ function loadAllTodos() {
   });
 }
 
-function clearSortingSymbols() {
+function clearSortSymbols() {
   Array.from(document.getElementsByClassName("sort-state")).forEach(
     (sortStateElement) => {
       sortStateElement.classList.add("hidden");
@@ -288,7 +287,7 @@ function clearSortingSymbols() {
   );
 }
 
-function clearActiveSortButtons() {
+function resetActiveSortButtons() {
   Array.from(document.getElementsByClassName("sort-button")).forEach(
     (sortButton) => {
       sortButton.classList.remove("active");
@@ -296,9 +295,18 @@ function clearActiveSortButtons() {
   );
 }
 
+function resetSortDescriptions() {
+  Array.from(document.getElementsByClassName("sort-attribute-prefix")).forEach(
+    (sortAttributePrefix) => {
+      sortAttributePrefix.classList.remove("hidden");
+    }
+  );
+}
+
 function resetSortingStyle() {
-  clearSortingSymbols();
-  clearActiveSortButtons();
+  clearSortSymbols();
+  resetActiveSortButtons();
+  resetSortDescriptions();
 }
 
 function sortTodoItemsBy(sortAttribute, sortOrder) {
@@ -327,6 +335,9 @@ function sortTodoItemsBy(sortAttribute, sortOrder) {
   document
     .querySelector(`#button-sort-by-${sortAttribute} .${sortOrder}`)
     .classList.remove("hidden");
+  document
+    .querySelector(`#button-sort-by-${sortAttribute} .sort-attribute-prefix`)
+    .classList.add("hidden");
 
   sessionStorage.setItem("sortOrder", sortOrder);
   sessionStorage.setItem("sortAttribute", sortAttribute);
