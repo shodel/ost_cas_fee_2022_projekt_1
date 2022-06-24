@@ -157,8 +157,7 @@ function initializeEditForm() {
 function createDueDateElement(todoItem) {
   const dueDateDiv = document.createElement("div");
   dueDateDiv.classList.add("todo-item-due-date");
-  const dueIn = getDifferenceInDaysFromNow(todoItem.dueDate);
-  dueDateDiv.innerHTML = dueIn;
+  dueDateDiv.innerHTML = getDifferenceInDaysFromNow(todoItem.dueDate);
   return dueDateDiv;
 }
 
@@ -185,10 +184,10 @@ function createStateElement(todoItem) {
   stateDiv.classList.add("todo-item-state");
   const stateCheckbox = document.createElement("input");
   stateCheckbox.type = "checkbox";
-  stateCheckbox.id = "todo-edit-state";
+  stateCheckbox.id = `todo-edit-state-${todoItem.id}`;
   stateCheckbox.disabled = true;
   const stateLabel = document.createElement("label");
-  stateLabel.htmlFor = "todo-edit-state";
+  stateLabel.htmlFor = `todo-edit-state-${todoItem.id}`;
   if (todoItem.finished) {
     stateCheckbox.checked = true;
     stateLabel.innerHTML = "Completed";

@@ -11,6 +11,10 @@
     padding: 6px 0 6px 6px;
 }
 
+.alternative-border-color {
+    border-color: whitesmoke;
+}
+
 .todo-item-due-date {
     grid-column: 1 / 2;
     grid-row: 1 / 2;
@@ -74,6 +78,36 @@ button {
 
 input[type="checkbox"] {
     margin-left: 0;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    font-size: 12px;
+    display: inline-block;
+    border: 1px solid grey;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+}
+
+input[type="checkbox"]:checked::before {
+    text-align: center;
+    content: "\2713";
+    color: white;
+    font-size: 12px;
+    background-color: #84b6fc;
+    border: none;
+    width: 16px;
+    height: 16px;
+}
+
+.todo-item-state label {
+    margin-left: 2px;
+    color: grey;
 }
 
 .hidden {
