@@ -54,7 +54,6 @@ export class TodoStore {
     return (
       this.database
         .find({})
-        // .sort({ orderDate: -1 })
         .exec()
     );
   }
